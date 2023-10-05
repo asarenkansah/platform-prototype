@@ -1,0 +1,64 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: xservices.aws.platformref.upbound.io
+  labels:
+    plan: full
+    provider: helm
+spec:
+  writeConnectionSecretsToNamespace: upbound-system
+  compositeTypeRef:
+    apiVersion: aws.platformref.upbound.io/v1alpha1
+    kind: XServices
+  resources:
+    - name: dapr
+      base:
+        apiVersion: helm.crossplane.io/v1beta1
+        kind: Release
+        spec:
+          rollbackLimit: 3
+          forProvider:
+            namespace: dapr-system
+            chart:
+              # from https://github.com/prometheus-community/helm-charts
+              # Note that default values are overridden by the patches below.
+              name: dapr
+              repository: https://dapr.github.io/helm-charts/
+              version: "1.9.5"
+            values: {}
+      patches:
+        # All Helm releases derive their labels and annotations from the XR.
+        - fromFieldPath: metadata.labels
+          toFieldPath: metadata.labels
+        - fromFieldPath: metadata.annotations
+          toFieldPath: metadata.annotations
+        # All Helm releases derive the ProviderConfig to use from the XR.
+        - fromFieldPath: spec.providerConfigRef.name
+          toFieldPath: spec.providerConfigRef.name
+        # Derive the Prometheus operator image and tag from the XR.
+        - fromFieldPath: spec.operators.prometheus.version
+          toFieldPath: spec.forProvider.chart.version
+    - name: releaseUXP
+      base:
+        apiVersion: helm.crossplane.io/v1beta1
+        kind: Release
+        spec:
+          rollbackLimit: 3
+          forProvider:
+            namespace: upbound-system
+            chart:
+              # from https://github.com/upbound/universal-crossplane
+              # Note that default values are overridden by the patches below.
+              name: universal-crossplane
+              repository: https://charts.upbound.io/stable
+              version: "1.10.1-up.1"
+            values: {}
+      patches:
+        # All Helm releases derive their labels and annotations from the XR.
+        - fromFieldPath: metadata.labels
+          toFieldPath: metadata.labels
+        - fromFieldPath: metadata.annotations
+          toFieldPath: metadata.annotations
+        # All Helm releases derive the ProviderConfig to use from the XR.
+        - fromFieldPath: spec.providerConfigRef.name
+          toFieldPath: spec.providerConfigRef.name

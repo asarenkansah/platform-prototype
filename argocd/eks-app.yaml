@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: eks-claim
+  namespace: argocd
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: 'crossplane'
+    repoURL: 'https://github.com/asarenkansah/k8s-prototypes.git'
+    targetRevision: HEAD
