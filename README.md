@@ -112,10 +112,11 @@ curl -sL "https://cli.upbound.io" | sh
 
 Download [Upbound Universal Crossplane](https://docs.upbound.io/uxp/install/?ref=upbound-blog#install-upbound-universal-crossplane)
 
-```
 # Make sure your ~/.kube/config file points to your cluster
 
+```
 up uxp install
+```
 
 ## Install & Configure AWS provider
 

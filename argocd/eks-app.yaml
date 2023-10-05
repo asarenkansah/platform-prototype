@@ -10,5 +10,5 @@ spec:
   project: default
   source:
     path: 'crossplane'
-    repoURL: 'https://github.com/asarenkansah/k8s-prototypes.git'
+    repoURL: 'https://github.com/asarenkansah/platform-prototype.git'
     targetRevision: HEAD
