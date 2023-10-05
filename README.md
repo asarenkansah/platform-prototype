@@ -208,5 +208,5 @@ kind: ConfigMap
 6. Apply Crossplane configuration through ArgoCD
 
 ```bash
-kubectl apply -f argocd/applicationset/crossplane/configuration/crossplane-config.yaml
+kubectl apply -f argocd/eks-app.yaml
 ```
